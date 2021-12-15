@@ -3,6 +3,24 @@ services:
     _defaults:
         autowire: true
 
+    App\Application:
+        public: true
+
+    3dbpp.clientFactory:
+        class: App\Client\HttpClientFactory
+        arguments:
+            $endpoint: '%3dbp.endpoint%'
+            $username: '%3dbp.username%'
+            $apiKey: '%3dbp.apiKey%'
+
+    3dbpp.solver:
+        class: App\Client\BinPackingClient
+        arguments:
+            $httpClient: !service
+                factory: ['@3dbpp.clientFactory', 'create']
+
+    App\Model\PackingSolver: '@3dbpp.solver'
+
     App\Doctrine\EntityManagerFactory:
         arguments:
             $host: '%mysql.host%'
@@ -14,5 +32,8 @@ services:
         # the first argument is the class and the second argument is the static method
         factory: ['@App\Doctrine\EntityManagerFactory', 'create']
 
-    App\Application:
-        public: true
+    Psr\Log\LoggerInterface:
+        class: Symfony\Component\Console\Logger\ConsoleLogger
+        arguments:
+            $output: !service
+                class: Symfony\Component\Console\Output\ConsoleOutput
