@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Client;
+namespace App\ThreeDBP;
 
 use App\Http\ClientFactory;
 use GuzzleHttp\Client;

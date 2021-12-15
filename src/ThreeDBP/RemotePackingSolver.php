@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Client;
+namespace App\ThreeDBP;
 
 use App\Entity\Packaging;
 use App\Http\LogHelper;
@@ -15,7 +15,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-class BinPackingClient implements PackingSolver
+class RemotePackingSolver implements PackingSolver
 {
     const RESPONSE_STATUS_SUCCESS = 1;
     // other response statuses missing, because the API documentation is inconsistent with reality

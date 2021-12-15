@@ -7,14 +7,14 @@ services:
         public: true
 
     3dbpp.clientFactory:
-        class: App\Client\HttpClientFactory
+        class: App\ThreeDBP\HttpClientFactory
         arguments:
             $endpoint: '%3dbp.endpoint%'
             $username: '%3dbp.username%'
             $apiKey: '%3dbp.apiKey%'
 
     3dbpp.solver:
-        class: App\Client\BinPackingClient
+        class: App\ThreeDBP\RemotePackingSolver
         arguments:
             $httpClient: !service
                 factory: ['@3dbpp.clientFactory', 'create']
