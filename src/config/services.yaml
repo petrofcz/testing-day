@@ -42,3 +42,6 @@ services:
         arguments:
             $output: !service
                 class: Symfony\Component\Console\Output\ConsoleOutput
+#
+#    Symfony\Component\Validator\Validator\ValidatorInterface:
+#        class:

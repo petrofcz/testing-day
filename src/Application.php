@@ -12,22 +12,29 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class Application
 {
     private EntityManagerInterface $em;
     private PackingSolver $solver;
     private LoggerInterface $logger;
+    private ?ValidatorInterface $validator = null;
 
     public function __construct(
         PackingSolver $solver,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
+        // ValidatorInterface $validator
     )
     {
         $this->em = $entityManager;
         $this->solver = $solver;
         $this->logger = $logger;
+        // $this->validator = $validator;
     }
 
     public function run(RequestInterface $request): ResponseInterface
@@ -40,10 +47,36 @@ class Application
         // todo add check for content-type header?
         // todo add size / rate limits?
         if($data === null) {
-            return new Response('400', [], 'JSON expected');
+            return new Response('400', ['content-type' => 'text/plain'], 'JSON expected');
         }
 
-        // todo add validation (use symfony validator)
+        // todo move outside?
+        $constraint = new Collection([
+            'products' => new Collection([
+                'id' => new Type('string'),
+                'width' => [
+                    new Type('float'),
+                    new Positive()
+                ],
+                'height' => [
+                    new Type('float'),
+                    new Positive()
+                ],
+                'length' => [
+                    new Type('float'),
+                    new Positive()
+                ],
+                'weight' => [
+                    new Type('float'),
+                    new Positive()
+                ],
+            ])
+        ]);
+
+//        $errors = $this->validator->validate($data, $constraint);
+//        if(count($errors)) {
+//            return new Response(400, ['content-type' => 'application/json'], json_encode($errors));
+//        }
 
         try {
             $result = $this->solver->pack(
@@ -72,7 +105,7 @@ class Application
             return new Response(500);
         }
 
-        return new Response(200, [], json_encode($outputData));
+        return new Response(200, ['content-type' => 'application/json'], json_encode($outputData));
     }
 
 }
