@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use InvalidArgumentException;
+
 class Item
 {
     protected string $id;
@@ -13,6 +15,9 @@ class Item
 
     public function __construct(string $id, float $width, float $height, float $length, float $weight)
     {
+        if(min($width, $height, $length, $weight) <= 0) {
+            throw new InvalidArgumentException();
+        }
         $this->id = $id;
         $this->width = $width;
         $this->height = $height;
