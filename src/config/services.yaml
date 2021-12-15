@@ -19,6 +19,11 @@ services:
             $httpClient: !service
                 factory: ['@3dbpp.clientFactory', 'create']
 
+# caching
+#    3dbpp.solver.cachingDecorator:
+#        decorates: 3dbpp.solver
+#        class: App\Cache\CachingPackingSolver
+
     App\Model\PackingSolver: '@3dbpp.solver'
 
     App\Doctrine\EntityManagerFactory:
