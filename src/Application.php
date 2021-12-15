@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -10,9 +10,9 @@ use Psr\Http\Message\ResponseInterface;
 class Application
 {
 
-    private EntityManager $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }

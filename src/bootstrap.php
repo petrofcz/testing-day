@@ -1,18 +1,20 @@
 <?php
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Doctrine\ORM\Tools\Setup;
+use App\Application;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__], true, null, null, false);
-$config->setNamingStrategy(new UnderscoreNamingStrategy());
+$containerBuilder = new ContainerBuilder();
+$loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__));
+$loader->load(__DIR__ . '/config/env.yaml');
+$loader->load(__DIR__ . '/config/services.yaml');
 
-return EntityManager::create([
-    'driver' => 'pdo_mysql',
-    'host' => 'mysql',
-    'user' => 'root',
-    'password' => 'secret',
-    'dbname' => 'packing',
-], $config);
+$containerBuilder->compile();
+
+
+/** @var Application $app */
+return $containerBuilder->get(Application::class);
+

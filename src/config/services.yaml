@@ -1,0 +1,18 @@
+services:
+
+    _defaults:
+        autowire: true
+
+    App\Doctrine\EntityManagerFactory:
+        arguments:
+            $host: '%mysql.host%'
+            $user: '%mysql.user%'
+            $password: '%mysql.password%'
+            $dbname: '%mysql.dbname%'
+
+    Doctrine\ORM\EntityManagerInterface:
+        # the first argument is the class and the second argument is the static method
+        factory: ['@App\Doctrine\EntityManagerFactory', 'create']
+
+    App\Application:
+        public: true
